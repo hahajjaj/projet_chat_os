@@ -73,7 +73,7 @@ int main(int argc, char const *argv[]) {
   }}
 
   else {
-    printf("Veuillez appeler le script : ./client pseudo ip port \n");
+    printf("Veuillez appeler le script : ./client <pseudo> <ip> <port> \n");
   }
 
 
