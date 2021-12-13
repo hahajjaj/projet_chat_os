@@ -25,6 +25,7 @@ void* read_function(void* socket){
    char *recvbuffer;
    receive(*sock, (void *)&recvbuffer);
    printf("%s\n", recvbuffer);
+   memset(&recvbuffer,0,  sizeof recvbuffer);
    free(recvbuffer);
    }
   }
@@ -65,11 +66,11 @@ int main(int argc, char const *argv[]) {
     message[len - 1] = '\0';
     // On garde la même taille de string pour explicitement envoyer le '\0'
     strcpy(buffer,pseudo_with_format);
+    
     strcat(buffer,message);
-
-    size_t len_total = strlen(message)+strlen(pseudo_with_format);
+    size_t len_total = strlen(buffer);
+    
     nbytes = ssend(sock, buffer, len_total);
-
   }}
 
   else {
