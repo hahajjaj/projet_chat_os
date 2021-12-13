@@ -48,6 +48,9 @@ int main(int argc, char *argv[]) {
     if (FD_ISSET(master_socket, &readfds)) {
       
       clients[nclients] = accept(master_socket, (struct sockaddr *)&address, (socklen_t *)&addrlen);
+      char *pseudo;
+      receive(clients[nclients], (void *)&pseudo);
+      printf("%s s'est connecté au chat\n", pseudo);
       nclients++;
     } else {
       // Sinon, c'est un message d'un client

@@ -31,7 +31,7 @@ void* read_function(void* socket){
 
 int main(int argc, char const *argv[]) {
   if (argc == 4){  
-     const char *pseudo = argv[1];
+     char *pseudo = (char *)argv[1];
      const char *ip = argv[2];
      const int port = atoi(argv[3]);
      char format[] = " : ";
@@ -48,6 +48,10 @@ int main(int argc, char const *argv[]) {
   checked(inet_pton(AF_INET, ip, &serv_addr.sin_addr));
 
   checked(connect(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr)));
+
+   //On envoi le pseudo après la connexion
+  ssend(sock, pseudo, strlen(pseudo));
+
   char message[1024];
   char buffer[1024];
   ssize_t nbytes;
