@@ -8,12 +8,14 @@
 #include <sys/socket.h>
 #include <sys/time.h>  //FD_SET, FD_ISSET, FD_ZERO macros
 #include <unistd.h>    //close
+#include <signal.h>
 
 #include "common.h"
 
 int main(int argc, char *argv[]) {
   if (argc == 2){
     const int port = atoi(argv[1]);
+    signal(SIGINT, handler);
     int opt = 1;
     int master_socket = checked(socket(AF_INET, SOCK_STREAM, 0));
     checked(setsockopt(master_socket, SOL_SOCKET, SO_REUSEADDR, (char *)&opt, sizeof(opt)));

@@ -21,9 +21,8 @@ void* read_function(void* socket){
     receive(*sock, (void *)&msg_receved);
     loc_time = localtime (&msg_receved->date_heure);
 
-    // printf("%zu ",msg_receved->size_message - 1);
     printf("%s", asctime(loc_time));
-    printf("%s\n", msg_receved->message_with_pseudo);
+    printf("%s : %s\n",msg_receved->pseudo, msg_receved->message);
     free(msg_receved);
 
 
@@ -54,24 +53,17 @@ int main(int argc, char const *argv[]) {
   ssend(sock, pseudo, strlen(pseudo));
 
   struct Message msg;
-  char message[1024];
-  char buffer[1024];
+  strcpy(msg.pseudo, pseudo);
   ssize_t nbytes;
   nbytes = 1;
   time_t curtime;
 
   pthread_t tids;
   pthread_create(&tids, NULL, read_function, &sock);
-  while (nbytes > 0 && fgets(message, 1024, stdin)) {
+  while (nbytes > 0 && fgets(msg.message, 1024, stdin)) {
     // Supprimer le \n
-    size_t len = strlen(message);
-    message[len - 1] = '\0';
-    // On garde la même taille de string pour explicitement envoyer le '\0'
-    strcpy(buffer,pseudo_with_format);
-    strcat(buffer,message);
-
-    strcpy(msg.message_with_pseudo,buffer);
-    // size_t len_total = strlen(buffer);
+    size_t len = strlen(msg.message);
+    msg.message[len - 1] = '\0';
     msg.size_message = len;
 
     curtime = time (NULL);
@@ -83,7 +75,7 @@ int main(int argc, char const *argv[]) {
   else {
     printf("Veuillez appeler le script : ./client <pseudo> <ip> <port> \n");
   }
-
+  printf("Fermeture du client\n");
 
   return 0;
 }

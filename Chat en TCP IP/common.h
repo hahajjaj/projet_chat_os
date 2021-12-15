@@ -4,14 +4,22 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <signal.h>
 
-
+void handler(int signal) {
+    if (signal == SIGINT) {
+        printf("Fermeture du serveur\n");
+        exit(0);
+    }
+    return;
+}
 
 struct Message
 {
+  char pseudo[1024];
   time_t date_heure;
   size_t size_message;
-  char message_with_pseudo[1024];
+  char message[1024];
   
 };
 
