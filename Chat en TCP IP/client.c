@@ -10,24 +10,24 @@
 
 
 
-struct Message
-{
-   size_t len;
-   char *buffer;
-   int fd;
-   ssize_t *nbytes;
-};
-
 
 void* read_function(void* socket){
   while (1){
-   int* sock = (int*)socket;
-   char *recvbuffer;
-   receive(*sock, (void *)&recvbuffer);
-   printf("%s\n", recvbuffer);
-   memset(&recvbuffer,0,  sizeof recvbuffer);
-   free(recvbuffer);
-   }
+    int* sock = (int*)socket;
+    
+    struct tm *loc_time;
+    struct Message *msg_receved;
+
+    receive(*sock, (void *)&msg_receved);
+    loc_time = localtime (&msg_receved->date_heure);
+
+    // printf("%zu ",msg_receved->size_message - 1);
+    printf("%s", asctime(loc_time));
+    printf("%s\n", msg_receved->message_with_pseudo);
+    free(msg_receved);
+
+
+    }
   }
 
 int main(int argc, char const *argv[]) {
@@ -53,10 +53,12 @@ int main(int argc, char const *argv[]) {
    //On envoi le pseudo après la connexion
   ssend(sock, pseudo, strlen(pseudo));
 
+  struct Message msg;
   char message[1024];
   char buffer[1024];
   ssize_t nbytes;
   nbytes = 1;
+  time_t curtime;
 
   pthread_t tids;
   pthread_create(&tids, NULL, read_function, &sock);
@@ -66,11 +68,16 @@ int main(int argc, char const *argv[]) {
     message[len - 1] = '\0';
     // On garde la même taille de string pour explicitement envoyer le '\0'
     strcpy(buffer,pseudo_with_format);
-    
     strcat(buffer,message);
-    size_t len_total = strlen(buffer);
-    
-    nbytes = ssend(sock, buffer, len_total);
+
+    strcpy(msg.message_with_pseudo,buffer);
+    // size_t len_total = strlen(buffer);
+    msg.size_message = len;
+
+    curtime = time (NULL);
+    msg.date_heure = curtime;
+  
+    nbytes = ssend(sock, &msg, sizeof(msg));
   }}
 
   else {

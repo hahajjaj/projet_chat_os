@@ -5,6 +5,16 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+
+
+struct Message
+{
+  time_t date_heure;
+  size_t size_message;
+  char message_with_pseudo[1024];
+  
+};
+
 int _checked(int ret, char* calling_function) {
   if (ret < 0) {
     perror(calling_function);

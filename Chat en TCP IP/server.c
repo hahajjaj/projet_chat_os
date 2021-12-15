@@ -48,7 +48,6 @@ int main(int argc, char *argv[]) {
 
       // Si c'est le master socket qui a des donnees, c'est une nouvele connexion.
       if (FD_ISSET(master_socket, &readfds)) {
-        
         clients[nclients] = accept(master_socket, (struct sockaddr *)&address, (socklen_t *)&addrlen);
         char *pseudo;
         receive(clients[nclients], (void *)&pseudo);
@@ -58,15 +57,15 @@ int main(int argc, char *argv[]) {
         // Sinon, c'est un message d'un client
         for (int i = 0; i < nclients; i++) {
           if (FD_ISSET(clients[i], &readfds)) {
-            char *buffer;
-            size_t nbytes = receive(clients[i], (void *)&buffer);
+            //struct *buffer;
+            struct Message *msg_receved;
+            size_t nbytes = receive(clients[i], (void *)&msg_receved);
             if (nbytes > 0) {  // closed
-
               // envoi du message à tout les clients qui se sont connectés
               for (int i = 0; i < nclients; i++) {
-                ssend(clients[i], buffer, nbytes);
+                ssend(clients[i], msg_receved, nbytes);
               }
-            free(buffer);
+            free(msg_receved);
             } else {
               close(clients[i]);
               // On deplace le dernier socket a la place de libre pur ne pas faire de trou.
