@@ -1,13 +1,19 @@
-// Example code: A simple server side code, which echos back the received message.
-// Handle multiple socket connections with select and fd_set on Linux
+/*
+Hamza Hajjaj 000461105
+Safouan Ehlalouch 000514145
+
+Projet de chat en TCP/IP pour le cours de système d'exploitation.
+
+*/
+
 #include <netinet/in.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>  //strlen
+#include <string.h> 
 #include <sys/socket.h>
-#include <sys/time.h>  //FD_SET, FD_ISSET, FD_ZERO macros
-#include <unistd.h>    //close
+#include <sys/time.h> 
+#include <unistd.h>
 #include <signal.h>
 
 #include "common.h"
@@ -15,7 +21,7 @@
 int main(int argc, char *argv[]) {
   if (argc == 2){
     const int port = atoi(argv[1]);
-    signal(SIGINT, handler);
+    signal(SIGINT, handler);   // Création de la gestion de signal pour le ctrl-c
     int opt = 1;
     int master_socket = checked(socket(AF_INET, SOCK_STREAM, 0));
     checked(setsockopt(master_socket, SOL_SOCKET, SO_REUSEADDR, (char *)&opt, sizeof(opt)));
@@ -46,7 +52,6 @@ int main(int argc, char *argv[]) {
       }
       // wait for an activity on one of the sockets, timeout is NULL
       select(max_fd + 1, &readfds, NULL, NULL, NULL);
-
 
       // Si c'est le master socket qui a des donnees, c'est une nouvele connexion.
       if (FD_ISSET(master_socket, &readfds)) {
@@ -81,7 +86,6 @@ int main(int argc, char *argv[]) {
   } else {
     printf("Veuillez appeler le script : ./serveur <port> \n");
   }
-  
 
   return 0;
 }
