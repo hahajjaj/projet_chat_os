@@ -64,7 +64,6 @@ int main(int argc, char *argv[]) {
         // Sinon, c'est un message d'un client
         for (int i = 0; i < nclients; i++) {
           if (FD_ISSET(clients[i], &readfds)) {
-            //struct *buffer;
             struct Message *msg_receved;
             size_t nbytes = receive(clients[i], (void *)&msg_receved);
             if (nbytes > 0) {  // closed
