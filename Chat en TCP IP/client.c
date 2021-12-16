@@ -18,8 +18,13 @@ void* read_function(void* socket){
     struct tm *loc_time;
     struct Message *msg_receved;
 
-    receive(*sock, (void *)&msg_receved);
+    int ret;
+    ret = receive(*sock, (void *)&msg_receved);
     loc_time = localtime (&msg_receved->date_heure);
+    if (ret == 0){
+      printf("Connexion perdue avec le serveur.");
+      exit(1);
+    }
 
     printf("%s", asctime(loc_time));
     printf("%s : %s\n",msg_receved->pseudo, msg_receved->message);

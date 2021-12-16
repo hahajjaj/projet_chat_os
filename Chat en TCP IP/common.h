@@ -51,7 +51,7 @@ size_t receive(int sock, void** dest) {
   size_t nbytes_to_receive;
   if (checked(read(sock, &nbytes_to_receive, sizeof(nbytes_to_receive))) == 0) {
     // Connection closed
-    exit(1);
+    return 0;
   };
   unsigned char* buffer = malloc(nbytes_to_receive);
   if (buffer == NULL) {
