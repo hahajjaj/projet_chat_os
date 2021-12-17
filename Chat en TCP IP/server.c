@@ -60,6 +60,7 @@ int main(int argc, char *argv[]) {
         receive(clients[nclients], (void *)&pseudo);
         printf("%s s'est connecté au chat\n", pseudo);
         nclients++;
+        free(pseudo);
       } else {
         // Sinon, c'est un message d'un client
         for (int i = 0; i < nclients; i++) {

@@ -69,7 +69,10 @@ int main(int argc, char const *argv[]) {
     strcpy(msg.pseudo, pseudo);
 
     pthread_t tids;
-    pthread_create(&tids, NULL, read_function, &sock);
+    int flag_creation_thread = pthread_create(&tids, NULL, read_function, &sock);
+    if (flag_creation_thread != 0){
+      exit(1);
+    }
     while (nbytes > 0 && fgets(msg.message, 1024, stdin)) {
       // Supprimer le \n
       size_t len = strlen(msg.message);
@@ -82,13 +85,10 @@ int main(int argc, char const *argv[]) {
     
       nbytes = ssend(sock, &msg, sizeof(msg));   // Envoi du message au serveur
     }
+    printf("Fermeture du client\n");
   }
-
   else {
     printf("Veuillez appeler le script : ./client <pseudo> <ip> <port> \n");
   }
-
-  printf("Fermeture du client\n");
-
   return 0;
 }
